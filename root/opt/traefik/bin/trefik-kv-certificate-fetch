@@ -1,0 +1,9 @@
+#!/bin/sh
+
+TRAEFIK_KV_KEY=dHJhZWZpay9hY21lL2FjY291bnQvb2JqZWN0
+
+curl \
+    --silent \
+    --fail \
+    --data '{"key": "${TRAEFIK_KV_KEY}"}' \
+    --header "Content-Type: application/json" 'http://etcd.etcd-cluster:2379/v3beta/kv/range' | jq -r .kvs[].value | base64 -d | gzip -d

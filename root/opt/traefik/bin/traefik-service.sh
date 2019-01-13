@@ -46,6 +46,10 @@ function serviceRestart {
     /opt/monit/bin/monit reload
 }
 
+function CertificateKvExists {
+
+}
+
 export TRAEFIK_LOG_FILE=${TRAEFIK_LOG_FILE:-"${SERVICE_HOME}/log/traefik.log"}
 export TRAEFIK_ACCESS_FILE=${TRAEFIK_ACCESS_FILE:-"${SERVICE_HOME}/log/access.log"}
 

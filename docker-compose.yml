@@ -1,0 +1,41 @@
+version: "2"
+
+services:
+    apache:
+        image: foobox/php-apache:7.2
+        labels:
+            - traefik.enable=true
+            - traefik.port=80
+            - traefik.frontend.rule=Host:localhost
+
+    traefik:
+        image: test/alpine-traefik
+        container_name: traefik
+        ports:
+            - 8000:8000/tcp
+            - 80:80/tcp
+        environment:
+            - CONF_INTERVAL=10s
+            - TRAEFIK_HTTP_PORT=80
+            - TRAEFIK_HTTP_COMPRESSION=true
+            - TRAEFIK_HTTPS_COMPRESSION=true
+            - TRAEFIK_HTTPS_PORT=443
+            - TRAEFIK_HTTPS_ENABLE=false
+            - TRAEFIK_ADMIN_ENABLE=true
+            - TRAEFIK_ADMIN_READ_ONLY=false
+            - TRAEFIK_ADMIN_STATISTICS=10
+            # - TRAEFIK_ADMIN_AUTH_METHOD="basic"
+            # - TRAEFIK_ADMIN_AUTH_USERS=""
+            - TRAEFIK_PROMETHEUS_ENABLE=false
+            - TRAEFIK_PROMETHEUS_BUCKETS="[0.1,0.3,1.2,5.0]"
+            - TRAEFIK_KV_TYPE=etcd
+            - TRAEFIK_KV_ENDPOINT=etcd
+
+    etcd:
+        image: rancher/etcd:v3.2.9-1
+        container_name: etcd
+        environment:
+            RANCHER_DEBUG: 'false'
+            EMBEDDED_BACKUPS: 'true'
+            BACKUP_PERIOD: '15m0s'
+            BACKUP_RETENTION: '24h'
